@@ -62,11 +62,21 @@ $defs:
             "https://json-schema.org/draft/2020-12/vocab/core":
               not:
                 const: false
+              errorMessage: >-
+                Meta-schemas that use the "$vocabulary" keyword
+                MUST explicitly list the Core vocabulary, and
+                MUST have a value of true indicating that it is required.
         propertyNames:
           type: string
           format: uri
         additionalProperties:
           type: boolean
+          enum:
+          - true
+          - false
+          markdownEnumDescriptions:
+          - required vocabulary
+          - optional vocabulary
         description: >-
           Identify the vocabularies available in meta-schemas, and
           indicate whether each vocabulary is required or optional.
@@ -84,6 +94,8 @@ $defs:
         type: string
         format: uri-reference
         pattern: ^[^#]*#?$
+        patternErrorMessage: >-
+          "$id" MUST NOT contain a non-empty fragment.
         description: >-
           Identifies a schema resource with its canonical URI.
         markdownDescription: |-
@@ -550,9 +562,6 @@ $defs:
         markdownEnumDescriptions:
         - Applications should refrain from usage of the declared property,
           and may mean the property is going to be removed in the future.
-
-          [JSON Schema Reference](
-          https://json-schema.org/draft/2020-12/json-schema-validation#section-9.3-2)
         markdownDescription: |-
           [JSON Schema Reference](
           https://json-schema.org/draft/2020-12/json-schema-validation#section-9.3)
@@ -665,15 +674,9 @@ $defs:
     - |-
       The boolean schema which always passes validation.
       As if the empty schema `{}`.
-
-      [JSON Schema Reference](
-      https://json-schema.org/draft/2020-12/json-schema-core#section-4.3.2-3.2)
     - |-
       The boolean schema which always fails validation.
       As if the schema `{ "not": {} }`.
-
-      [JSON Schema Reference](
-      https://json-schema.org/draft/2020-12/json-schema-core#section-4.3.2-3.4)
 
   ## validation # 7.3. Defined Formats
   DefinedFormatsEnum:
@@ -753,22 +756,32 @@ $defs:
 
       "errorMessage":
         type: string
+        markdownDescription: |-
+          _undocumented_
 
       "patternErrorMessage":
         type: string
+        markdownDescription: |-
+          _undocumented_
 
       "deprecationMessage":
         type: string
+        markdownDescription: |-
+          _undocumented_
 
       "enumDescriptions":
         type: array
         items:
           type: string
+        markdownDescription: |-
+          _undocumented_
 
       "markdownEnumDescriptions":
         type: array
         items:
           type: string
+        markdownDescription: |-
+          _undocumented_
 
       "markdownDescription":
         type: string
@@ -793,15 +806,23 @@ $defs:
 
       "doNotSuggest":
         type: boolean
+        markdownDescription: |-
+          _undocumented_
 
       "suggestSortText":
         type: string
+        markdownDescription: |-
+          _undocumented_
 
       "allowComments":
         type: boolean
+        markdownDescription: |-
+          _undocumented_
 
       "allowTrailingCommas":
         type: boolean
+        markdownDescription: |-
+          _undocumented_
 
   ## /src/parser/jsonParser.ts
   VSCode-VocabularyFormatAssertion:
