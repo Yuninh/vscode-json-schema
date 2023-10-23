@@ -45,14 +45,129 @@ $defs:
   ## 8. The JSON Schema Core Vocabulary
   VocabularyCore:
     $comment: https://json-schema.org/draft/2020-12/vocab/core
+    properties:
+      ## 8.1. Meta-Schemas and Vocabularies
+      "$schema":
+        type: string
+        format: uri
+
+      "$vocabulary":
+        type: object
+        allOf:
+        - required:
+          - https://json-schema.org/draft/2020-12/vocab/core
+        - properties:
+            "https://json-schema.org/draft/2020-12/vocab/core":
+              not:
+                const: false
+        propertyNames:
+          type: string
+          format: uri
+        additionalProperties:
+          type: boolean
+        default:
+          https://json-schema.org/draft/2020-12/vocab/core: true
+
+      ## 8.2. Base URI, Anchors, and Dereferencing
+      "$id":
+        type: string
+        format: uri-reference
+
+      "$anchor":
+        type: string
+        pattern: ^[A-Za-z_][0-9A-Za-z._-]*$
+      "$dynamicAnchor":
+        type: string
+        pattern: ^[A-Za-z_][0-9A-Za-z._-]*$
+
+      "$ref":
+        type: string
+        format: uri-reference
+      "$dynamicRef":
+        type: string
+        format: uri-reference
+
+      "$defs":
+        type: object
+        additionalProperties:
+          $ref: "#/$defs/Schema"
+
+      ## 8.3. Comments With "$comment"
+      "$comment":
+        type: string
 
   ## 10. A Vocabulary for Applying Subschemas
   VocabularyApplicator:
     $comment: https://json-schema.org/draft/2020-12/vocab/applicator
+    properties:
+      ## 10.2. Keywords for Applying Subschemas in Place
+      "allOf":
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/Schema"
+      "anyOf":
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/Schema"
+      "oneOf":
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/Schema"
+      "not":
+        $ref: "#/$defs/Schema"
+
+      "if":
+        $ref: "#/$defs/Schema"
+      "then":
+        $ref: "#/$defs/Schema"
+      "else":
+        $ref: "#/$defs/Schema"
+      "dependentSchemas":
+        type: object
+        additionalProperties:
+          $ref: "#/$defs/Schema"
+
+      ## 10.3. Keywords for Applying Subschemas to Child Instances
+      "prefixItems":
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/Schema"
+
+      "items":
+        $ref: "#/$defs/Schema"
+      "contains":
+        $ref: "#/$defs/Schema"
+
+      "properties":
+        type: object
+        additionalProperties:
+          $ref: "#/$defs/Schema"
+      "patternProperties":
+        type: object
+        propertyNames:
+          format: regex
+        additionalProperties:
+          $ref: "#/$defs/Schema"
+      "additionalProperties":
+        $ref: "#/$defs/Schema"
+      "propertyNames":
+        $ref: "#/$defs/Schema"
 
   ## 11. A Vocabulary for Unevaluated Locations
   VocabularyUnevaluated:
     $comment: https://json-schema.org/draft/2020-12/vocab/unevaluated
+    properties:
+      ## 11.2. unevaluatedItems
+      "unevaluatedItems":
+        $ref: "#/$defs/Schema"
+
+      ## 11.3. unevaluatedProperties
+      "unevaluatedProperties":
+        $ref: "#/$defs/Schema"
 
   ## JSON Schema Validation: A Vocabulary for Structural Validation of JSON
   ## https://json-schema.org/draft/2020-12/json-schema-validation
@@ -60,29 +175,189 @@ $defs:
   ## 6. A Vocabulary for Structural Validation
   VocabularyValidation:
     $comment: https://json-schema.org/draft/2020-12/vocab/validation
+    properties:
+      ## 6.1. Validation Keywords for Any Instance Type
+      "type":
+        oneOf:
+        - $ref: "#/$defs/PrimitiveTypeEnum"
+        - $ref: "#/$defs/NonPrimitiveTypeEnum"
+        - type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            oneOf:
+            - $ref: "#/$defs/PrimitiveTypeEnum"
+            - $ref: "#/$defs/NonPrimitiveTypeEnum"
+
+      "enum":
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items:
+          $comment: any type
+
+      "const":
+        $comment: any type
+
+      ## 6.2. Validation Keywords for Numeric Instances (number and integer)
+      "multipleOf":
+        type: number
+        exclusiveMinimum: 0
+
+      "maximum":
+        type: number
+
+      "exclusiveMaximum":
+        type: number
+
+      "minimum":
+        type: number
+
+      "exclusiveMinimum":
+        type: number
+
+      ## 6.3. Validation Keywords for Strings
+      "maxLength":
+        type: integer
+        minimum: 0
+
+      "minLength":
+        type: integer
+        minimum: 0
+
+      "pattern":
+        type: string
+        format: regex
+
+      ## 6.4. Validation Keywords for Arrays
+      "maxItems":
+        type: integer
+        minimum: 0
+
+      "minItems":
+        type: integer
+        minimum: 0
+
+      "uniqueItems":
+        type: boolean
+
+      "maxContains":
+        type: integer
+        minimum: 0
+
+      "minContains":
+        type: integer
+        minimum: 0
+
+      ## 6.5. Validation Keywords for Objects
+      "maxProperties":
+        type: integer
+        minimum: 0
+
+      "minProperties":
+        type: integer
+        minimum: 0
+
+      "required":
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+
+      "dependentRequired":
+        type: object
+        additionalProperties:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
 
   ## 7. Vocabularies for Semantic Content With "format"
   VocabularyFormatAnnotation:
     $comment: https://json-schema.org/draft/2020-12/vocab/format-annotation
+    properties:
+      "format":
+        type: string
 
   VocabularyFormatAssertion:
     $comment: https://json-schema.org/draft/2020-12/vocab/format-assertion
+    properties:
+      "format":
+        type: string
 
   ## 8. A Vocabulary for the Contents of String-Encoded Data
   VocabularyContent:
     $comment: https://json-schema.org/draft/2020-12/vocab/content
+    properties:
+      "contentEncoding":
+        type: string
+
+      "contentMediaType":
+        type: string
+
+      "contentSchema":
+        $ref: "#/$defs/Schema"
 
   ## 9. A Vocabulary for Basic Meta-Data Annotations
   VocabularyMetaData:
     $comment: https://json-schema.org/draft/2020-12/vocab/meta-data
+    properties:
+      ## 9.1. "title" and "description"
+      "title":
+        type: string
+      "description":
+        type: string
+
+      ## 9.2. "default"
+      "default":
+        $comment: any type
+
+      ## 9.3. "deprecated"
+      "deprecated":
+        type: boolean
+
+      ## 9.4. "readOnly" and "writeOnly"
+      "readOnly":
+        type: boolean
+      "writeOnly":
+        type: boolean
+
+      ## 9.5. "examples"
+      "examples":
+        type: array
+        items:
+          $comment: any type
 
   ## JSON Hyper-Schema: A Vocabulary for Hypermedia Annotation of JSON
   ## https://json-schema.org/draft/2019-09/json-schema-hypermedia
 
   VocabularyHyperSchema:
     $comment: https://json-schema.org/draft/2019-09/vocab/hyper-schema
+    properties:
+      "base":
+        type: string
+        format: uri-template
+      "links":
+        type: array
+        items:
+          $comment: Link Description Objects
 
   ### Definitions ###
+
+  ## core # 4.2.1. Instance Data Model
+  PrimitiveTypeEnum:
+    enum:
+    - "array"
+    - "boolean"
+    - "null"
+    - "number"
+    - "object"
+    - "string"
+
+  ## validation # 6.1.1. type
+  NonPrimitiveTypeEnum:
+    enum:
+    - "integer"
 
   ## core # 4.3. JSON Schema Documents
   Schema:
@@ -102,6 +377,37 @@ $defs:
   BooleanSchema:
     type: boolean
 
+  ## validation # 7.3. Defined Formats
+  DefinedFormatsEnum:
+    enum:
+    ## 7.3.1. Dates, Times, and Duration
+    - date-time
+    - date
+    - time
+    - duration
+    ## 7.3.2. Email Addresses
+    - email
+    - idn-email
+    ## 7.3.3. Hostnames
+    - hostname
+    - idn-hostname
+    ## 7.3.4. IP Addresses
+    - ipv4
+    - ipv6
+    ## 7.3.5. Resource Identifiers
+    - uri
+    - uri-reference
+    - iri
+    - iri-reference
+    - uuid
+    ## 7.3.6. uri-template
+    - uri-template
+    ## 7.3.7. JSON Pointers
+    - json-pointer
+    - relative-json-pointer
+    ## 7.3.8. regex
+    - regex
+
   ####### Core Specification END #######
 
   #
@@ -114,10 +420,83 @@ $defs:
   ## /src/jsonSchema.ts
   VSCode-VocabularyExtension:
     $comment: URI unspecified
+    properties:
+      "defaultSnippets":
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            "label":
+              type: string
+            "description":
+              type: string
+            "markdownDescription":
+              type: string
+            "body":
+              $ref: "#/$defs/Schema"
+            "bodyText":
+              type: string
+
+      "errorMessage":
+        type: string
+
+      "patternErrorMessage":
+        type: string
+
+      "deprecationMessage":
+        type: string
+
+      "enumDescriptions":
+        type: array
+        items:
+          type: string
+
+      "markdownEnumDescriptions":
+        type: array
+        items:
+          type: string
+
+      "markdownDescription":
+        type: string
+
+      "doNotSuggest":
+        type: boolean
+
+      "suggestSortText":
+        type: string
+
+      "allowComments":
+        type: boolean
+
+      "allowTrailingCommas":
+        type: boolean
 
   ## /src/parser/jsonParser.ts
   VSCode-VocabularyFormatAssertion:
     $comment: URI unspecified
+    properties:
+      "format":
+        type: string
+        anyOf:
+        - $ref: "#/$defs/VSCode-SupportedFormatsEnum"
+        - true
+
+  ### Definitions ###
+
+  VSCode-SupportedFormatsEnum:
+    enum:
+    - color-hex
+    #
+    - date-time
+    - date
+    - time
+    - email
+    - hostname
+    - ipv4
+    - ipv6
+    - uri
+    - uri-reference
 
   ####### Implementation Extension END #######
 
