@@ -1,0 +1,124 @@
+%YAML 1.2
+---
+title: JSON Meta-Schema (2020-12) for VSCode
+
+$id: /vscode-json-schema/meta
+$vocabulary:
+  "https://json-schema.org/draft/2020-12/vocab/core": true
+  "https://json-schema.org/draft/2020-12/vocab/applicator": true
+  "https://json-schema.org/draft/2020-12/vocab/unevaluated": true
+  "https://json-schema.org/draft/2020-12/vocab/validation": true
+  "https://json-schema.org/draft/2020-12/vocab/format-annotation": true
+  "https://json-schema.org/draft/2020-12/vocab/format-assertion": false
+  "https://json-schema.org/draft/2020-12/vocab/content": true
+  "https://json-schema.org/draft/2020-12/vocab/meta-data": true
+  "https://json-schema.org/draft/2019-09/vocab/hyper-schema": false
+
+allOf:
+- $ref: "#/$defs/Schema"
+
+$defs:
+  EnabledStandardVocabularies:
+    allOf:
+    - $ref: "#/$defs/VocabularyCore"
+    - $ref: "#/$defs/VocabularyApplicator"
+    - $ref: "#/$defs/VocabularyUnevaluated"
+    - $ref: "#/$defs/VocabularyValidation"
+    - $ref: "#/$defs/VocabularyFormatAnnotation"
+    # $ref: "#/$defs/VocabularyFormatAssertion"
+    - $ref: "#/$defs/VocabularyContent"
+    - $ref: "#/$defs/VocabularyMetaData"
+    # $ref: "#/$defs/VocabularyHyperSchema"
+
+  EnabledExtendedVocabularies:
+    allOf:
+    - $ref: "#/$defs/VSCode-VocabularyExtension"
+    - $ref: "#/$defs/VSCode-VocabularyFormatAssertion"
+
+  ####### Core Specification BEGIN #######
+
+  ### Vocabularies ###
+
+  ## JSON Schema: A Media Type for Describing JSON Documents
+  ## https://json-schema.org/draft/2020-12/json-schema-core
+
+  ## 8. The JSON Schema Core Vocabulary
+  VocabularyCore:
+    $comment: https://json-schema.org/draft/2020-12/vocab/core
+
+  ## 10. A Vocabulary for Applying Subschemas
+  VocabularyApplicator:
+    $comment: https://json-schema.org/draft/2020-12/vocab/applicator
+
+  ## 11. A Vocabulary for Unevaluated Locations
+  VocabularyUnevaluated:
+    $comment: https://json-schema.org/draft/2020-12/vocab/unevaluated
+
+  ## JSON Schema Validation: A Vocabulary for Structural Validation of JSON
+  ## https://json-schema.org/draft/2020-12/json-schema-validation
+
+  ## 6. A Vocabulary for Structural Validation
+  VocabularyValidation:
+    $comment: https://json-schema.org/draft/2020-12/vocab/validation
+
+  ## 7. Vocabularies for Semantic Content With "format"
+  VocabularyFormatAnnotation:
+    $comment: https://json-schema.org/draft/2020-12/vocab/format-annotation
+
+  VocabularyFormatAssertion:
+    $comment: https://json-schema.org/draft/2020-12/vocab/format-assertion
+
+  ## 8. A Vocabulary for the Contents of String-Encoded Data
+  VocabularyContent:
+    $comment: https://json-schema.org/draft/2020-12/vocab/content
+
+  ## 9. A Vocabulary for Basic Meta-Data Annotations
+  VocabularyMetaData:
+    $comment: https://json-schema.org/draft/2020-12/vocab/meta-data
+
+  ## JSON Hyper-Schema: A Vocabulary for Hypermedia Annotation of JSON
+  ## https://json-schema.org/draft/2019-09/json-schema-hypermedia
+
+  VocabularyHyperSchema:
+    $comment: https://json-schema.org/draft/2019-09/vocab/hyper-schema
+
+  ### Definitions ###
+
+  ## core # 4.3. JSON Schema Documents
+  Schema:
+    oneOf:
+    - $ref: "#/$defs/SchemaObject"
+    - $ref: "#/$defs/BooleanSchema"
+
+  ## core # 4.3.1. JSON Schema Objects and Keywords
+  SchemaObject:
+    type: object
+    allOf:
+    - $ref: "#/$defs/EnabledExtendedVocabularies"
+    - $ref: "#/$defs/EnabledStandardVocabularies"
+    unevaluatedProperties: false
+
+  ## core # 4.3.2. Boolean JSON Schemas
+  BooleanSchema:
+    type: boolean
+
+  ####### Core Specification END #######
+
+  #
+
+  ####### Implementation Extension BEGIN #######
+  ## https://github.com/microsoft/vscode-json-languageservice
+
+  ### Vocabularies ###
+
+  ## /src/jsonSchema.ts
+  VSCode-VocabularyExtension:
+    $comment: URI unspecified
+
+  ## /src/parser/jsonParser.ts
+  VSCode-VocabularyFormatAssertion:
+    $comment: URI unspecified
+
+  ####### Implementation Extension END #######
+
+...
