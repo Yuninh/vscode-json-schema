@@ -2,6 +2,7 @@
 ---
 title: JSON Meta-Schema (2020-12) for VSCode
 
+# A temporary placeholder for identity
 $id: /vscode-json-schema/meta
 $vocabulary:
   "https://json-schema.org/draft/2020-12/vocab/core": true
@@ -77,6 +78,7 @@ $defs:
         type: string
         pattern: ^[A-Za-z_][0-9A-Za-z._-]*$
       "$dynamicAnchor":
+        $comment: Not supported.
         type: string
         pattern: ^[A-Za-z_][0-9A-Za-z._-]*$
 
@@ -84,6 +86,7 @@ $defs:
         type: string
         format: uri-reference
       "$dynamicRef":
+        $comment: Not supported.
         type: string
         format: uri-reference
 
@@ -376,6 +379,9 @@ $defs:
   ## core # 4.3.2. Boolean JSON Schemas
   BooleanSchema:
     type: boolean
+    enum:
+    - true
+    - false
 
   ## validation # 7.3. Defined Formats
   DefinedFormatsEnum:
