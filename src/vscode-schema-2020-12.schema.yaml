@@ -30,6 +30,9 @@ $defs:
     - $ref: "#/$defs/VocabularyContent"
     - $ref: "#/$defs/VocabularyMetaData"
     # $ref: "#/$defs/VocabularyHyperSchema"
+    #
+    - $ref: "#/$defs/Compatibility-VocabularyNextVersion"
+    - $ref: "#/$defs/Compatibility-VocabularyOlderDrafts"
 
   EnabledExtendedVocabularies:
     allOf:
@@ -239,7 +242,14 @@ $defs:
           https://json-schema.org/draft/2020-12/json-schema-core#section-10.3.1.1)
 
       "items":
-        $ref: "#/$defs/Schema"
+        oneOf:
+        - $ref: "#/$defs/Schema"
+        - deprecated: true
+          deprecationMessage: >-
+            `array`-values for keyword "items" are deprecated in draft 2020-12.
+          type: array
+          items:
+            $ref: "#/$defs/Schema"
         description: >-
           Apply to all instance elements at indexes greater than
           the length of the "prefixItems" array in the same schema object.
@@ -634,6 +644,129 @@ $defs:
         markdownDescription: |-
           [JSON Schema Reference](
           https://json-schema.org/draft/2019-09/json-schema-hypermedia#rfc.section.5.2)
+
+  ## Specification Links
+  ## https://json-schema.org/specification-links
+
+  Compatibility-VocabularyNextVersion:
+    $comment: >-
+      No certain IRIs for the draft and vocabularies.
+      https://json-schema.org/work-in-progress
+      https://github.com/json-schema-org/json-schema-spec
+    properties:
+      "propertyDependencies":
+        type: object
+        $comment: outer object key is the property name of the instance
+        additionalProperties:
+          type: object
+          $comment: inner object key is the property value of the instance
+          additionalProperties:
+            $ref: "#/$defs/Schema"
+            $comment: the schema apply to the entire instance.
+        deprecated: true
+        deprecationMessage: >-
+          This meta-schema feature (propertyDependencies)
+          seems not to be supported by the validator yet.
+        markdownDescription: |-
+          Unreleased [Reference on GitHub](
+          https://github.com/json-schema-org/json-schema-spec/blob/main/jsonschema-core.md#propertydependencies)
+    patternProperties:
+      ^x-:
+        title: Explicit Annotation
+
+  Compatibility-VocabularyOlderDrafts:
+    $comment: >-
+      No available IRIs for this vocabularies.
+      https://json-schema.org/specification-links#published-drafts
+    properties:
+      ## vocab/core in [Draft 2019-09]
+      "$recursiveRef":
+        type: string
+        format: uri-reference
+        allOf:
+        - deprecated: true
+          deprecationMessage: >-
+            Use "$dynamicRef" instead. [Draft 2020-12]
+        - deprecated: true
+          deprecationMessage: >-
+            This meta-schema feature ($recursiveRef or $dynamicRef)
+            seems not to be supported by the validator yet.
+        markdownDescription: |-
+          Deprecated [JSON Schema Reference](
+          https://json-schema.org/draft/2019-09/json-schema-core#rfc.section.8.2.4.2.1)
+
+      "$recursiveAnchor":
+        type: string
+        $comment: |-
+          The requirement for property "pattern" is different from
+          the one for "$anchor" and "$dynamicAnchor" in draft 2020-12.
+        pattern: ^[A-Za-z][0-9A-Za-z.:_-]*$
+        allOf:
+        - deprecated: true
+          deprecationMessage: >-
+            Use "$dynamicAnchor" instead. [Draft 2020-12]
+        - deprecated: true
+          deprecationMessage: >-
+            This meta-schema feature ($recursiveAnchor or $dynamicAnchor)
+            seems not to be supported by the validator yet.
+        markdownDescription: |-
+          Deprecated [JSON Schema Reference](
+          https://json-schema.org/draft/2019-09/json-schema-core#rfc.section.8.2.4.2.2)
+
+      ## vocab/applicator in [Draft 2019-09]
+      "additionalItems":
+        $ref: "#/$defs/Schema"
+        deprecated: true
+        deprecationMessage: >-
+          Use "items" (with "prefixItems") instead. [Draft 2020-12]
+        markdownDescription: |-
+          Deprecated [JSON Schema Reference](
+          https://json-schema.org/draft/2019-09/json-schema-core#rfc.section.9.3.1.2)
+
+      ## json-schema-validation in [Draft 7]
+      "dependencies":
+        type: object
+        additionalProperties:
+          oneOf:
+          - type: array
+            minItems: 1
+            items:
+              type: string
+          - $ref: "#/$defs/Schema"
+        deprecated: true
+        deprecationMessage: >-
+          Use "dependentRequired" or "dependentSchemas" instead. [Draft 2019-09]
+        markdownDescription: |-
+          Deprecated [JSON Schema Reference](
+          https://json-schema.org/draft-07/json-schema-validation#rfc.section.6.5.7)
+
+      "definitions":
+        type: object
+        $comment: >-
+          For compatibility, keyword "definitions" is not marked as deprecated,
+          although it has been replaced by "$defs".
+
+          See "Appendix A" of vocab/validation in [Draft 2019-09]
+        additionalProperties:
+          $ref: "#/$defs/Schema"
+        description: >-
+          Replaced by "$defs". [Draft 2019-09]
+        markdownDescription: |-
+          Replaced by `$defs`. [Draft 2019-09]
+
+          Deprecated [JSON Schema Reference](
+          https://json-schema.org/draft-07/json-schema-validation#rfc.section.9)
+
+      ## json-schema-core in [Draft 4]
+      "id":
+        type: string
+        format: uri-reference
+        deprecated: true
+        deprecationMessage: >-
+          Replaced by "$id". [Draft 6]
+        markdownDescription: |-
+          Deprecated [JSON Schema Reference](
+          https://json-schema.org/draft-04/json-schema-core#rfc.section.7.2)
 
   ### Definitions ###
 
