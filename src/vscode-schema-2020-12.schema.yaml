@@ -469,12 +469,28 @@ $defs:
     properties:
       "format":
         type: string
+        oneOf:
+        - $ref: "#/$defs/DefinedFormatEnum"
+        - not:
+            $ref: "#/$defs/DefinedFormatEnum"
+          markdownDescription: |-
+            _undocumented_
+        title: Format Annotation
 
   VocabularyFormatAssertion:
     $comment: https://json-schema.org/draft/2020-12/vocab/format-assertion
     properties:
       "format":
         type: string
+        oneOf:
+        - $ref: "#/$defs/DefinedFormatEnum"
+        - not:
+            $ref: "#/$defs/DefinedFormatEnum"
+          deprecated: true
+          deprecationMessage: >-
+            With this vocabulary specified,
+            validation for an unknown custom "format" attribute always fails.
+        title: Format Assertion
 
   ## 8. A Vocabulary for the Contents of String-Encoded Data
   VocabularyContent:
@@ -679,7 +695,7 @@ $defs:
       As if the schema `{ "not": {} }`.
 
   ## validation # 7.3. Defined Formats
-  DefinedFormatsEnum:
+  DefinedFormatEnum:
     enum:
     ## 7.3.1. Dates, Times, and Duration
     - date-time
@@ -708,6 +724,50 @@ $defs:
     - relative-json-pointer
     ## 7.3.8. regex
     - regex
+
+    markdownEnumDescriptions:
+    - A `date-time` representation.
+      (_according to [RFC 3339](https://www.rfc-editor.org/info/rfc3339)_)
+    - A `full-date` representation.
+      (_according to [RFC 3339](https://www.rfc-editor.org/info/rfc3339)_)
+    - A `full-time` representation.
+      (_according to [RFC 3339](https://www.rfc-editor.org/info/rfc3339)_)
+    - An ISO duration.
+      (_according to [RFC 3339](https://www.rfc-editor.org/info/rfc3339) and
+      [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html)_)
+    - An Internet email address.
+      (_according to [RFC 5321](https://www.rfc-editor.org/info/rfc5321)_)
+    - An extended Internet email address.
+      (_according to [RFC 6531](https://www.rfc-editor.org/info/rfc6531)_)
+    - An Internet hostname.
+      (_according to [RFC 1123](https://www.rfc-editor.org/info/rfc1123) and
+      [RFC 5891](https://www.rfc-editor.org/info/rfc5891)_)
+    - An Internet hostname (including an internationalized hostname).
+      (_according to [RFC 1123](https://www.rfc-editor.org/info/rfc1123) and
+      [RFC 5890](https://www.rfc-editor.org/info/rfc5890)_)
+    - An IPv4 address.
+      (_according to [RFC 2673](https://www.rfc-editor.org/info/rfc2673)_)
+    - An IPv6 address.
+      (_according to [RFC 4291](https://www.rfc-editor.org/info/rfc4291)_)
+    - A URI.
+      (_according to [RFC 3986](https://www.rfc-editor.org/info/rfc3986)_)
+    - A URI reference (either a URI or a relative-reference).
+      (_according to [RFC 3986](https://www.rfc-editor.org/info/rfc3986)_)
+    - An IRI.
+      (_according to [RFC 3987](https://www.rfc-editor.org/info/rfc3987)_)
+    - An IRI reference (either an IRI or a relative-reference).
+      (_according to [RFC 3987](https://www.rfc-editor.org/info/rfc3987)_)
+    - A string representation of a UUID.
+      (_according to [RFC 4122](https://www.rfc-editor.org/info/rfc4122)_)
+    - A URI template (_of any level_).
+      (_according to [RFC 6570](https://www.rfc-editor.org/info/rfc6570)_)
+    - A JSON string representation of a JSON pointer.
+      (_according to [RFC 6901](https://www.rfc-editor.org/info/rfc6901)_)
+    - A relative JSON pointer.
+      (_according to [relative-json-pointer](
+      https://www.ietf.org/archive/id/draft-handrews-relative-json-pointer-01.txt)_)
+    - A regular expression.
+      (_according to [ECMA-262 dialect](https://262.ecma-international.org/)_)
 
   ####### Core Specification END #######
 
@@ -831,12 +891,13 @@ $defs:
       "format":
         type: string
         anyOf:
-        - $ref: "#/$defs/VSCode-SupportedFormatsEnum"
+        - $ref: "#/$defs/VSCode-SupportedFormatEnum"
+          title: Format Assertion
         - true
 
   ### Definitions ###
 
-  VSCode-SupportedFormatsEnum:
+  VSCode-SupportedFormatEnum:
     enum:
     - color-hex
     #
@@ -849,6 +910,8 @@ $defs:
     - ipv6
     - uri
     - uri-reference
+    markdownEnumDescriptions:
+    - Hexadecimal color syntax of an sRGB color (`#RGB[A]` or `#RRGGBB[AA]`).
 
   ####### Implementation Extension END #######
 
