@@ -1,0 +1,836 @@
+{
+	"title": "JSON Meta-Schema (2020-12) for VSCode",
+	"$id": "/vscode-json-schema/meta",
+	"$vocabulary": {
+		"https://json-schema.org/draft/2020-12/vocab/core": true,
+		"https://json-schema.org/draft/2020-12/vocab/applicator": true,
+		"https://json-schema.org/draft/2020-12/vocab/unevaluated": true,
+		"https://json-schema.org/draft/2020-12/vocab/validation": true,
+		"https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
+		"https://json-schema.org/draft/2020-12/vocab/format-assertion": false,
+		"https://json-schema.org/draft/2020-12/vocab/content": true,
+		"https://json-schema.org/draft/2020-12/vocab/meta-data": true,
+		"https://json-schema.org/draft/2019-09/vocab/hyper-schema": false
+	},
+	"allOf": [
+		{
+			"$ref": "#/$defs/Schema"
+		}
+	],
+	"$defs": {
+		"EnabledStandardVocabularies": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/VocabularyCore"
+				},
+				{
+					"$ref": "#/$defs/VocabularyApplicator"
+				},
+				{
+					"$ref": "#/$defs/VocabularyUnevaluated"
+				},
+				{
+					"$ref": "#/$defs/VocabularyValidation"
+				},
+				{
+					"$ref": "#/$defs/VocabularyFormatAnnotation"
+				},
+				{
+					"$ref": "#/$defs/VocabularyContent"
+				},
+				{
+					"$ref": "#/$defs/VocabularyMetaData"
+				},
+				{
+					"$ref": "#/$defs/Compatibility-VocabularyNextDraft"
+				},
+				{
+					"$ref": "#/$defs/Compatibility-VocabularyOlderDrafts"
+				}
+			]
+		},
+		"EnabledExtendedVocabularies": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/VSCode-VocabularyExtension"
+				},
+				{
+					"$ref": "#/$defs/VSCode-VocabularyFormatAssertion"
+				}
+			]
+		},
+		"VocabularyCore": {
+			"$comment": "https://json-schema.org/draft/2020-12/vocab/core",
+			"properties": {
+				"$schema": {
+					"type": "string",
+					"format": "uri",
+					"title": "$schema"
+				},
+				"$vocabulary": {
+					"type": "object",
+					"allOf": [
+						{
+							"required": [
+								"https://json-schema.org/draft/2020-12/vocab/core"
+							]
+						},
+						{
+							"properties": {
+								"https://json-schema.org/draft/2020-12/vocab/core": {
+									"not": {
+										"const": false
+									},
+									"errorMessage": "Meta-schemas that use the \"$vocabulary\" keyword MUST explicitly list the Core vocabulary, and MUST have a value of true indicating that it is required."
+								}
+							}
+						}
+					],
+					"propertyNames": {
+						"type": "string",
+						"format": "uri"
+					},
+					"additionalProperties": {
+						"type": "boolean",
+						"enum": [
+							true,
+							false
+						],
+						"markdownEnumDescriptions": [
+							"required vocabulary",
+							"optional vocabulary"
+						]
+					},
+					"description": "Identify the vocabularies available in meta-schemas, and indicate whether each vocabulary is required or optional.",
+					"markdownDescription": "Identify the vocabularies available in meta-schemas, and\nindicate whether each vocabulary is required or optional.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-8.1.2)",
+					"default": {
+						"https://json-schema.org/draft/2020-12/vocab/core": true
+					}
+				},
+				"$id": {
+					"type": "string",
+					"format": "uri-reference",
+					"pattern": "^[^#]*#?$",
+					"patternErrorMessage": "\"$id\" MUST NOT contain a non-empty fragment.",
+					"description": "Identifies a schema resource with its canonical URI.",
+					"markdownDescription": "Identifies a schema resource with its [canonical URI](\nhttps://www.rfc-editor.org/info/rfc6596).\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-8.2.1)"
+				},
+				"$anchor": {
+					"type": "string",
+					"pattern": "^[A-Za-z_][0-9A-Za-z._-]*$",
+					"description": "Specify a plain name fragment that is not tied to any particular structural location.",
+					"markdownDescription": "Specify a plain name fragment\nthat is not tied to any particular structural location.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-8.2.2)"
+				},
+				"$dynamicAnchor": {
+					"$comment": "Not supported.",
+					"type": "string",
+					"pattern": "^[A-Za-z_][0-9A-Za-z._-]*$"
+				},
+				"$ref": {
+					"type": "string",
+					"format": "uri-reference",
+					"description": "Reference a statically identified schema.",
+					"markdownDescription": "Reference a statically identified schema.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-8.2.3.1)"
+				},
+				"$dynamicRef": {
+					"$comment": "Not supported.",
+					"type": "string",
+					"format": "uri-reference"
+				},
+				"$defs": {
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "#/$defs/Schema"
+					},
+					"description": "A location for schema authors to inline re-usable JSON Schemas into a more general schema.",
+					"markdownDescription": "A location for schema authors to inline re-usable JSON Schemas\ninto a more general schema.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-8.2.4)"
+				},
+				"$comment": {
+					"type": "string",
+					"description": "A location for comments from schema authors to readers or maintainers of the schema.",
+					"markdownDescription": "A location for comments\nfrom schema authors to readers or maintainers of the schema.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-8.3)"
+				}
+			}
+		},
+		"VocabularyApplicator": {
+			"$comment": "https://json-schema.org/draft/2020-12/vocab/applicator",
+			"properties": {
+				"allOf": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/Schema"
+					},
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.2.1.1)"
+				},
+				"anyOf": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/Schema"
+					},
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.2.1.2)"
+				},
+				"oneOf": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/Schema"
+					},
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.2.1.3)"
+				},
+				"not": {
+					"$ref": "#/$defs/Schema",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.2.1.4)"
+				},
+				"if": {
+					"$ref": "#/$defs/Schema",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.2.2.1)"
+				},
+				"then": {
+					"$ref": "#/$defs/Schema",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.2.2.2)"
+				},
+				"else": {
+					"$ref": "#/$defs/Schema",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.2.2.3)"
+				},
+				"dependentSchemas": {
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "#/$defs/Schema"
+					},
+					"description": "Specify subschemas that are evaluated if the instance is an object and contains a certain property.",
+					"markdownDescription": "Specify subschemas that are evaluated\nif the *instance* is an object and contains a certain property.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.2.2.4)"
+				},
+				"prefixItems": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/Schema"
+					},
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.1.1)"
+				},
+				"items": {
+					"$ref": "#/$defs/Schema",
+					"description": "Apply to all instance elements at indexes greater than the length of the \"prefixItems\" array in the same schema object.",
+					"markdownDescription": "Apply to all instance elements at indexes greater than\nthe length of the `prefixItems` array in the same *schema* object.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.1.2)"
+				},
+				"contains": {
+					"$ref": "#/$defs/Schema",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.1.3)"
+				},
+				"properties": {
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "#/$defs/Schema"
+					},
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.2.1)"
+				},
+				"patternProperties": {
+					"type": "object",
+					"propertyNames": {
+						"format": "regex"
+					},
+					"additionalProperties": {
+						"$ref": "#/$defs/Schema"
+					},
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.2.2)"
+				},
+				"additionalProperties": {
+					"$ref": "#/$defs/Schema",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.2.3)"
+				},
+				"propertyNames": {
+					"$ref": "#/$defs/Schema",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.2.4)"
+				}
+			}
+		},
+		"VocabularyUnevaluated": {
+			"$comment": "https://json-schema.org/draft/2020-12/vocab/unevaluated",
+			"properties": {
+				"unevaluatedItems": {
+					"$ref": "#/$defs/Schema",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-11.2)"
+				},
+				"unevaluatedProperties": {
+					"$ref": "#/$defs/Schema",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-11.3)"
+				}
+			}
+		},
+		"VocabularyValidation": {
+			"$comment": "https://json-schema.org/draft/2020-12/vocab/validation",
+			"properties": {
+				"type": {
+					"oneOf": [
+						{
+							"$ref": "#/$defs/PrimitiveTypeEnum"
+						},
+						{
+							"$ref": "#/$defs/NonPrimitiveTypeEnum"
+						},
+						{
+							"type": "array",
+							"minItems": 1,
+							"uniqueItems": true,
+							"items": {
+								"oneOf": [
+									{
+										"$ref": "#/$defs/PrimitiveTypeEnum"
+									},
+									{
+										"$ref": "#/$defs/NonPrimitiveTypeEnum"
+									}
+								]
+							}
+						}
+					],
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.1.1)"
+				},
+				"enum": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": true,
+					"items": {
+						"$comment": "any type"
+					},
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.1.2)"
+				},
+				"const": {
+					"$comment": "any type",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.1.3)"
+				},
+				"multipleOf": {
+					"type": "number",
+					"exclusiveMinimum": 0,
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.1)"
+				},
+				"maximum": {
+					"type": "number",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.2)"
+				},
+				"exclusiveMaximum": {
+					"type": "number",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.3)"
+				},
+				"minimum": {
+					"type": "number",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.4)"
+				},
+				"exclusiveMinimum": {
+					"type": "number",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.5)"
+				},
+				"maxLength": {
+					"type": "integer",
+					"minimum": 0,
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.3.1)"
+				},
+				"minLength": {
+					"type": "integer",
+					"minimum": 0,
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.3.2)"
+				},
+				"pattern": {
+					"type": "string",
+					"format": "regex",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.3.3)"
+				},
+				"maxItems": {
+					"type": "integer",
+					"minimum": 0,
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.4.1)"
+				},
+				"minItems": {
+					"type": "integer",
+					"minimum": 0,
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.4.2)"
+				},
+				"uniqueItems": {
+					"type": "boolean",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.4.3)"
+				},
+				"maxContains": {
+					"type": "integer",
+					"minimum": 0,
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.4.4)"
+				},
+				"minContains": {
+					"type": "integer",
+					"minimum": 0,
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.4.5)"
+				},
+				"maxProperties": {
+					"type": "integer",
+					"minimum": 0,
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.1)"
+				},
+				"minProperties": {
+					"type": "integer",
+					"minimum": 0,
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.2)"
+				},
+				"required": {
+					"type": "array",
+					"uniqueItems": true,
+					"items": {
+						"type": "string"
+					},
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.3)"
+				},
+				"dependentRequired": {
+					"type": "object",
+					"additionalProperties": {
+						"type": "array",
+						"uniqueItems": true,
+						"items": {
+							"type": "string"
+						}
+					},
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.4)"
+				}
+			}
+		},
+		"VocabularyFormatAnnotation": {
+			"$comment": "https://json-schema.org/draft/2020-12/vocab/format-annotation",
+			"properties": {
+				"format": {
+					"type": "string",
+					"oneOf": [
+						{
+							"$ref": "#/$defs/DefinedFormatEnum"
+						},
+						{
+							"not": {
+								"$ref": "#/$defs/DefinedFormatEnum"
+							},
+							"markdownDescription": "_undocumented_"
+						}
+					],
+					"title": "Format Annotation"
+				}
+			}
+		},
+		"VocabularyFormatAssertion": {
+			"$comment": "https://json-schema.org/draft/2020-12/vocab/format-assertion",
+			"properties": {
+				"format": {
+					"type": "string",
+					"oneOf": [
+						{
+							"$ref": "#/$defs/DefinedFormatEnum"
+						},
+						{
+							"not": {
+								"$ref": "#/$defs/DefinedFormatEnum"
+							},
+							"deprecated": true,
+							"deprecationMessage": "With this vocabulary specified, validation for an unknown custom \"format\" attribute always fails."
+						}
+					],
+					"title": "Format Assertion"
+				}
+			}
+		},
+		"VocabularyContent": {
+			"$comment": "https://json-schema.org/draft/2020-12/vocab/content",
+			"properties": {
+				"contentEncoding": {
+					"type": "string",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-8.3)"
+				},
+				"contentMediaType": {
+					"type": "string",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-8.4)"
+				},
+				"contentSchema": {
+					"$ref": "#/$defs/Schema",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-8.5)"
+				}
+			}
+		},
+		"VocabularyMetaData": {
+			"$comment": "https://json-schema.org/draft/2020-12/vocab/meta-data",
+			"properties": {
+				"title": {
+					"type": "string",
+					"description": "Decorate a user interface with information about the data produced by this user interface.\nA title will preferably be short.",
+					"markdownDescription": "Decorate a user interface with information\nabout the data produced by this user interface.\n\nA `title` will preferably be short.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-9.1)"
+				},
+				"description": {
+					"type": "string",
+					"description": "Decorate a user interface with information about the data produced by this user interface.\nA description will provide explanation about the purpose of the instance described by this schema.",
+					"markdownDescription": "Decorate a user interface with information\nabout the data produced by this user interface.\n\nA `description` will provide explanation\nabout the purpose of the instance described by this schema.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-9.1)"
+				},
+				"default": {
+					"$comment": "any type",
+					"description": "Supply a default JSON value associated with a particular schema.\nIt is RECOMMENDED that a default value be valid against the associated schema.",
+					"markdownDescription": "Supply a default JSON value associated with a particular *schema*.\n\nIt is recommended that\na `default` value be valid against the associated *schema*.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-9.2)"
+				},
+				"deprecated": {
+					"type": "boolean",
+					"enum": [
+						true,
+						false
+					],
+					"markdownEnumDescriptions": [
+						"Applications should refrain from usage of the declared property, and may mean the property is going to be removed in the future."
+					],
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-9.3)"
+				},
+				"readOnly": {
+					"type": "boolean",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-9.4)"
+				},
+				"writeOnly": {
+					"type": "boolean",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-9.4)"
+				},
+				"examples": {
+					"type": "array",
+					"items": {
+						"$comment": "any type"
+					},
+					"description": "Provide sample JSON values associated with a particular schema, for the purpose of illustrating usage.\nIt is RECOMMENDED that these values be valid against the associated schema.",
+					"markdownDescription": "Provide sample JSON values associated with a particular *schema*,\nfor the purpose of illustrating usage.\n\nIt is recommended that\nthese values be valid against the associated *schema*.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-9.5-2)"
+				}
+			}
+		},
+		"VocabularyHyperSchema": {
+			"$comment": "https://json-schema.org/draft/2019-09/vocab/hyper-schema",
+			"properties": {
+				"base": {
+					"type": "string",
+					"format": "uri-template",
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2019-09/json-schema-hypermedia#rfc.section.5.1)"
+				},
+				"links": {
+					"type": "array",
+					"items": {
+						"$comment": "Link Description Objects"
+					},
+					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2019-09/json-schema-hypermedia#rfc.section.5.2)"
+				}
+			}
+		},
+		"Compatibility-VocabularyNextDraft": {
+			"$comment": "No certain IRIs for the draft and vocabularies. https://json-schema.org/work-in-progress https://github.com/json-schema-org/json-schema-spec",
+			"properties": {
+				"propertyDependencies": {
+					"type": "object",
+					"$comment": "outer object key is the property name of the instance",
+					"additionalProperties": {
+						"type": "object",
+						"$comment": "inner object key is the property value of the instance",
+						"additionalProperties": {
+							"$ref": "#/$defs/Schema",
+							"$comment": "the schema apply to the entire instance."
+						}
+					},
+					"deprecated": true,
+					"deprecationMessage": "This meta-schema feature (propertyDependencies) seems not to be supported by the validator yet.",
+					"markdownDescription": "Unreleased [Reference on GitHub](\nhttps://github.com/json-schema-org/json-schema-spec/blob/main/jsonschema-core.md#propertydependencies)"
+				}
+			},
+			"patternProperties": {
+				"^x-": {
+					"title": "Explicit Annotation",
+					"markdownDescription": "Unreleased [Reference on GitHub](\nhttps://github.com/json-schema-org/json-schema-spec/blob/main/jsonschema-core.md#explicit-annotation-keywords-explicit-annotations)"
+				}
+			}
+		},
+		"Compatibility-VocabularyOlderDrafts": {
+			"$comment": "No available IRIs for this vocabularies. https://json-schema.org/specification-links#published-drafts",
+			"properties": {
+				"$recursiveRef": {
+					"type": "string",
+					"format": "uri-reference",
+					"allOf": [
+						{
+							"deprecated": true,
+							"deprecationMessage": "Use \"$dynamicRef\" instead. [Draft 2020-12]"
+						},
+						{
+							"deprecated": true,
+							"deprecationMessage": "This meta-schema feature ($recursiveRef or $dynamicRef) seems not to be supported by the validator yet."
+						}
+					],
+					"markdownDescription": "Deprecated [JSON Schema Reference](\nhttps://json-schema.org/draft/2019-09/json-schema-core#rfc.section.8.2.4.2.1)"
+				},
+				"$recursiveAnchor": {
+					"type": "string",
+					"$comment": "The requirement for property \"pattern\" is different from\nthe one for \"$anchor\" and \"$dynamicAnchor\" in [Draft 2020-12]",
+					"pattern": "^[A-Za-z][0-9A-Za-z.:_-]*$",
+					"allOf": [
+						{
+							"deprecated": true,
+							"deprecationMessage": "Use \"$dynamicAnchor\" instead. [Draft 2020-12]"
+						},
+						{
+							"deprecated": true,
+							"deprecationMessage": "This meta-schema feature ($recursiveAnchor or $dynamicAnchor) seems not to be supported by the validator yet."
+						}
+					],
+					"markdownDescription": "Deprecated [JSON Schema Reference](\nhttps://json-schema.org/draft/2019-09/json-schema-core#rfc.section.8.2.4.2.2)"
+				},
+				"additionalItems": {
+					"$ref": "#/$defs/Schema",
+					"deprecated": true,
+					"deprecationMessage": "Use \"items\" (with \"prefixItems\") instead. [Draft 2020-12]",
+					"markdownDescription": "Deprecated [JSON Schema Reference](\nhttps://json-schema.org/draft/2019-09/json-schema-core#rfc.section.9.3.1.2)"
+				},
+				"dependencies": {
+					"type": "object",
+					"additionalProperties": {
+						"oneOf": [
+							{
+								"type": "array",
+								"minItems": 1,
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"$ref": "#/$defs/Schema"
+							}
+						]
+					},
+					"deprecated": true,
+					"deprecationMessage": "Use \"dependentRequired\" or \"dependentSchemas\" instead. [Draft 2019-09]",
+					"markdownDescription": "Deprecated [JSON Schema Reference](\nhttps://json-schema.org/draft-07/json-schema-validation#rfc.section.6.5.7)"
+				},
+				"definitions": {
+					"type": "object",
+					"$comment": "For compatibility, keyword \"definitions\" is not marked as deprecated, although it has been replaced by \"$defs\".\nSee \"Appendix A\" of vocab/validation in [Draft 2019-09]",
+					"additionalProperties": {
+						"$ref": "#/$defs/Schema"
+					},
+					"description": "Replaced by \"$defs\". [Draft 2019-09]",
+					"markdownDescription": "Replaced by `$defs`. [Draft 2019-09]\n\nDeprecated [JSON Schema Reference](\nhttps://json-schema.org/draft-07/json-schema-validation#rfc.section.9)"
+				},
+				"id": {
+					"type": "string",
+					"format": "uri-reference",
+					"deprecated": true,
+					"deprecationMessage": "Replaced by \"$id\". [Draft 6]",
+					"markdownDescription": "Deprecated [JSON Schema Reference](\nhttps://json-schema.org/draft-04/json-schema-core#rfc.section.7.2)"
+				}
+			}
+		},
+		"PrimitiveTypeEnum": {
+			"enum": [
+				"array",
+				"boolean",
+				"null",
+				"number",
+				"object",
+				"string"
+			],
+			"markdownEnumDescriptions": [
+				"An ordered list of instances, from the JSON `array` value.",
+				"A \"true\" or \"false\" value, from the JSON `true` or `false` value.",
+				"A JSON `null` value.",
+				"An arbitrary-precision, base-10 decimal number value, from the JSON `number` value.",
+				"An unordered set of properties mapping a string to an instance, from the JSON `object` value.",
+				"A string of Unicode code points, from the JSON `string` value."
+			]
+		},
+		"NonPrimitiveTypeEnum": {
+			"enum": [
+				"integer"
+			],
+			"markdownEnumDescriptions": [
+				"A `number` with a zero fractional part."
+			]
+		},
+		"Schema": {
+			"oneOf": [
+				{
+					"$ref": "#/$defs/SchemaObject"
+				},
+				{
+					"$ref": "#/$defs/BooleanSchema"
+				}
+			]
+		},
+		"SchemaObject": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "#/$defs/EnabledExtendedVocabularies"
+				},
+				{
+					"$ref": "#/$defs/EnabledStandardVocabularies"
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"BooleanSchema": {
+			"type": "boolean",
+			"enum": [
+				true,
+				false
+			],
+			"markdownEnumDescriptions": [
+				"The boolean schema which always passes validation.\nAs if the empty schema `{}`.",
+				"The boolean schema which always fails validation.\nAs if the schema `{ \"not\": {} }`."
+			]
+		},
+		"DefinedFormatEnum": {
+			"enum": [
+				"date-time",
+				"date",
+				"time",
+				"duration",
+				"email",
+				"idn-email",
+				"hostname",
+				"idn-hostname",
+				"ipv4",
+				"ipv6",
+				"uri",
+				"uri-reference",
+				"iri",
+				"iri-reference",
+				"uuid",
+				"uri-template",
+				"json-pointer",
+				"relative-json-pointer",
+				"regex"
+			],
+			"markdownEnumDescriptions": [
+				"A `date-time` representation. (_according to [RFC 3339](https://www.rfc-editor.org/info/rfc3339)_)",
+				"A `full-date` representation. (_according to [RFC 3339](https://www.rfc-editor.org/info/rfc3339)_)",
+				"A `full-time` representation. (_according to [RFC 3339](https://www.rfc-editor.org/info/rfc3339)_)",
+				"An ISO duration. (_according to [RFC 3339](https://www.rfc-editor.org/info/rfc3339) and [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html)_)",
+				"An Internet email address. (_according to [RFC 5321](https://www.rfc-editor.org/info/rfc5321)_)",
+				"An extended Internet email address. (_according to [RFC 6531](https://www.rfc-editor.org/info/rfc6531)_)",
+				"An Internet hostname. (_according to [RFC 1123](https://www.rfc-editor.org/info/rfc1123) and [RFC 5891](https://www.rfc-editor.org/info/rfc5891)_)",
+				"An Internet hostname (including an internationalized hostname). (_according to [RFC 1123](https://www.rfc-editor.org/info/rfc1123) and [RFC 5890](https://www.rfc-editor.org/info/rfc5890)_)",
+				"An IPv4 address. (_according to [RFC 2673](https://www.rfc-editor.org/info/rfc2673)_)",
+				"An IPv6 address. (_according to [RFC 4291](https://www.rfc-editor.org/info/rfc4291)_)",
+				"A URI. (_according to [RFC 3986](https://www.rfc-editor.org/info/rfc3986)_)",
+				"A URI reference (either a URI or a relative-reference). (_according to [RFC 3986](https://www.rfc-editor.org/info/rfc3986)_)",
+				"An IRI. (_according to [RFC 3987](https://www.rfc-editor.org/info/rfc3987)_)",
+				"An IRI reference (either an IRI or a relative-reference). (_according to [RFC 3987](https://www.rfc-editor.org/info/rfc3987)_)",
+				"A string representation of a UUID. (_according to [RFC 4122](https://www.rfc-editor.org/info/rfc4122)_)",
+				"A URI template (_of any level_). (_according to [RFC 6570](https://www.rfc-editor.org/info/rfc6570)_)",
+				"A JSON string representation of a JSON pointer. (_according to [RFC 6901](https://www.rfc-editor.org/info/rfc6901)_)",
+				"A relative JSON pointer. (_according to [relative-json-pointer]( https://www.ietf.org/archive/id/draft-handrews-relative-json-pointer-01.txt)_)",
+				"A regular expression. (_according to [ECMA-262 dialect](https://262.ecma-international.org/)_)"
+			]
+		},
+		"VSCode-VocabularyExtension": {
+			"$comment": "URI unspecified",
+			"properties": {
+				"defaultSnippets": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"additionalProperties": false,
+						"properties": {
+							"label": {
+								"type": "string"
+							},
+							"description": {
+								"type": "string"
+							},
+							"markdownDescription": {
+								"type": "string"
+							},
+							"body": {
+								"$ref": "#/$defs/Schema"
+							},
+							"bodyText": {
+								"type": "string"
+							}
+						}
+					},
+					"description": "Specify any number of snippets for the given JSON object.\nNote that \"defaultSnippets\" is not part of the JSON schema specification but a VS Code-specific schema extension.",
+					"markdownDescription": "Specify any number of snippets for the given JSON object.\n\nNote that `defaultSnippets` is\nnot part of the JSON schema specification\nbut a VS Code-specific schema extension.\n\n[Visual Studio Code Reference](\nhttps://code.visualstudio.com/docs/languages/json#_define-snippets-in-json-schemas)"
+				},
+				"errorMessage": {
+					"type": "string",
+					"markdownDescription": "_undocumented_"
+				},
+				"patternErrorMessage": {
+					"type": "string",
+					"markdownDescription": "_undocumented_"
+				},
+				"deprecationMessage": {
+					"type": "string",
+					"markdownDescription": "_undocumented_"
+				},
+				"enumDescriptions": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"markdownDescription": "_undocumented_"
+				},
+				"markdownEnumDescriptions": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"markdownDescription": "_undocumented_"
+				},
+				"markdownDescription": {
+					"type": "string",
+					"description": "Opt in by using Markdown in your formatting with the \"markdownDescription\" property.\nNote that \"markdownDescription\" is not part of the JSON schema specification but a VS Code-specific schema extension.",
+					"markdownDescription": "Opt in by using [Markdown](\nhttps://code.visualstudio.com/docs/languages/markdown)\nin your formatting with the `markdownDescription` property.\n\nNote that `markdownDescription` is\nnot part of the JSON schema specification\nbut a VS Code-specific schema extension.\n\n[Visual Studio Code Reference](\nhttps://code.visualstudio.com/docs/languages/json#_use-rich-formatting-in-hovers)"
+				},
+				"doNotSuggest": {
+					"type": "boolean",
+					"markdownDescription": "_undocumented_"
+				},
+				"suggestSortText": {
+					"type": "string",
+					"markdownDescription": "_undocumented_"
+				},
+				"allowComments": {
+					"type": "boolean",
+					"markdownDescription": "_undocumented_"
+				},
+				"allowTrailingCommas": {
+					"type": "boolean",
+					"markdownDescription": "_undocumented_"
+				}
+			}
+		},
+		"VSCode-VocabularyFormatAssertion": {
+			"$comment": "URI unspecified",
+			"properties": {
+				"format": {
+					"type": "string",
+					"anyOf": [
+						{
+							"$ref": "#/$defs/VSCode-SupportedFormatEnum",
+							"title": "Format Assertion"
+						},
+						true
+					]
+				}
+			}
+		},
+		"VSCode-SupportedFormatEnum": {
+			"enum": [
+				"color-hex",
+				"date-time",
+				"date",
+				"time",
+				"email",
+				"hostname",
+				"ipv4",
+				"ipv6",
+				"uri",
+				"uri-reference"
+			],
+			"markdownEnumDescriptions": [
+				"Hexadecimal color syntax of an sRGB color (`#RGB[A]` or `#RRGGBB[AA]`)."
+			]
+		}
+	}
+}
