@@ -42,7 +42,7 @@
 					"$ref": "#/$defs/VocabularyMetaData"
 				},
 				{
-					"$ref": "#/$defs/Compatibility-VocabularyNextDraft"
+					"$ref": "#/$defs/Compatibility-VocabularyNextVersion"
 				},
 				{
 					"$ref": "#/$defs/Compatibility-VocabularyOlderDrafts"
@@ -65,7 +65,9 @@
 				"$schema": {
 					"type": "string",
 					"format": "uri",
-					"title": "$schema"
+					"title": "$schema",
+					"description": "The schema to verify this document against.",
+					"markdownDescription": "The schema to verify this document against.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-8.1.1)"
 				},
 				"$vocabulary": {
 					"type": "object",
@@ -73,7 +75,8 @@
 						{
 							"required": [
 								"https://json-schema.org/draft/2020-12/vocab/core"
-							]
+							],
+							"$comment": "Meta-schemas that use the \"$vocabulary\" keyword MUST explicitly list the Core vocabulary."
 						},
 						{
 							"properties": {
@@ -209,10 +212,23 @@
 					"items": {
 						"$ref": "#/$defs/Schema"
 					},
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.1.1)"
+					"description": "Validate each item in the array instance against each subschema.",
+					"markdownDescription": "Validate each item in the array *instance* against each *subschema*.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.1.1)"
 				},
 				"items": {
-					"$ref": "#/$defs/Schema",
+					"oneOf": [
+						{
+							"$ref": "#/$defs/Schema"
+						},
+						{
+							"deprecated": true,
+							"deprecationMessage": "`array`-values for keyword \"items\" are deprecated in draft 2020-12.",
+							"type": "array",
+							"items": {
+								"$ref": "#/$defs/Schema"
+							}
+						}
+					],
 					"description": "Apply to all instance elements at indexes greater than the length of the \"prefixItems\" array in the same schema object.",
 					"markdownDescription": "Apply to all instance elements at indexes greater than\nthe length of the `prefixItems` array in the same *schema* object.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.1.2)"
 				},
@@ -225,7 +241,8 @@
 					"additionalProperties": {
 						"$ref": "#/$defs/Schema"
 					},
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.2.1)"
+					"description": "Validate each property-value in the object instance against each subschema.",
+					"markdownDescription": "Validate each property-value in the object *instance*\nagainst each *subschema*.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.2.1)"
 				},
 				"patternProperties": {
 					"type": "object",
@@ -235,7 +252,7 @@
 					"additionalProperties": {
 						"$ref": "#/$defs/Schema"
 					},
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.2.2)"
+					"markdownDescription": "Validate each property-value in the object *instance*\nif the property-name matches given pattern.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-core#section-10.3.2.2)"
 				},
 				"additionalProperties": {
 					"$ref": "#/$defs/Schema",
@@ -266,10 +283,17 @@
 				"type": {
 					"oneOf": [
 						{
-							"$ref": "#/$defs/PrimitiveTypeEnum"
-						},
-						{
-							"$ref": "#/$defs/NonPrimitiveTypeEnum"
+							"type": "string",
+							"oneOf": [
+								{
+									"$ref": "#/$defs/PrimitiveTypeEnum"
+								},
+								{
+									"$ref": "#/$defs/NonPrimitiveTypeEnum"
+								}
+							],
+							"description": "Specify the instance's type.",
+							"markdownDescription": "Specify the *instance*'s type.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.1.1)"
 						},
 						{
 							"type": "array",
@@ -284,10 +308,11 @@
 										"$ref": "#/$defs/NonPrimitiveTypeEnum"
 									}
 								]
-							}
+							},
+							"description": "Specify a subset where the instance's type is limited.",
+							"markdownDescription": "Specify a subset where the *instance*'s type is limited.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.1.1)"
 						}
-					],
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.1.1)"
+					]
 				},
 				"enum": {
 					"type": "array",
@@ -296,57 +321,66 @@
 					"items": {
 						"$comment": "any type"
 					},
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.1.2)"
+					"markdownDescription": "Specify all valid *instance* values.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.1.2)"
 				},
 				"const": {
 					"$comment": "any type",
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.1.3)"
+					"markdownDescription": "Specify the only valid *instance* value.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.1.3)"
 				},
 				"multipleOf": {
 					"type": "number",
 					"exclusiveMinimum": 0,
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.1)"
+					"markdownDescription": "A number that should cleanly divide the current value\n(i.e. have no remainder).\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.1)"
 				},
 				"maximum": {
 					"type": "number",
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.2)"
+					"description": "An inclusive upper limit for a numeric instance.",
+					"markdownDescription": "An inclusive upper limit for a numeric *instance*.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.2)"
 				},
 				"exclusiveMaximum": {
 					"type": "number",
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.3)"
+					"description": "An exclusive upper limit for a numeric instance.",
+					"markdownDescription": "An exclusive upper limit for a numeric *instance*.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.3)"
 				},
 				"minimum": {
 					"type": "number",
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.4)"
+					"description": "An inclusive lower limit for a numeric instance.",
+					"markdownDescription": "An inclusive lower limit for a numeric *instance*.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.4)"
 				},
 				"exclusiveMinimum": {
 					"type": "number",
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.5)"
+					"description": "An exclusive lower limit for a numeric instance.",
+					"markdownDescription": "An exclusive lower limit for a numeric *instance*.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.2.5)"
 				},
 				"maxLength": {
 					"type": "integer",
 					"minimum": 0,
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.3.1)"
+					"description": "An inclusive upper limit for the length of string instances.",
+					"markdownDescription": "An inclusive upper limit for the length of string *instance*s.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.3.1)"
 				},
 				"minLength": {
 					"type": "integer",
 					"minimum": 0,
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.3.2)"
+					"description": "An inclusive lower limit for the length of string instances.",
+					"markdownDescription": "An inclusive lower limit for the length of string *instance*s.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.3.2)"
 				},
 				"pattern": {
 					"type": "string",
 					"format": "regex",
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.3.3)"
+					"description": "An ECMA-262 regular expression which a string instance must match.",
+					"markdownDescription": "An ECMA-262 regular expression which a string *instance* must match.\n\n_note: VSCode supports ECMA-262,\nso use non-capture groups instead of capture groups if possible._\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.3.3)"
 				},
 				"maxItems": {
 					"type": "integer",
 					"minimum": 0,
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.4.1)"
+					"description": "An inclusive upper limit for the length of array instances.",
+					"markdownDescription": "An inclusive upper limit for the length of array *instance*s.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.4.1)"
 				},
 				"minItems": {
 					"type": "integer",
 					"minimum": 0,
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.4.2)"
+					"description": "An inclusive lower limit for the length of array instances.",
+					"markdownDescription": "An inclusive lower limit for the length of array *instance*s.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.4.2)"
 				},
 				"uniqueItems": {
 					"type": "boolean",
@@ -365,12 +399,12 @@
 				"maxProperties": {
 					"type": "integer",
 					"minimum": 0,
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.1)"
+					"markdownDescription": "The maximum number of properties an object can have, inclusive.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.1)"
 				},
 				"minProperties": {
 					"type": "integer",
 					"minimum": 0,
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.2)"
+					"markdownDescription": "The minimum number of properties an object can have, inclusive.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.2)"
 				},
 				"required": {
 					"type": "array",
@@ -378,7 +412,7 @@
 					"items": {
 						"type": "string"
 					},
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.3)"
+					"markdownDescription": "Names of all properties required on an object *instance*.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.3)"
 				},
 				"dependentRequired": {
 					"type": "object",
@@ -439,11 +473,11 @@
 			"properties": {
 				"contentEncoding": {
 					"type": "string",
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-8.3)"
+					"markdownDescription": "The content encoding of a `string` property.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-8.3)"
 				},
 				"contentMediaType": {
 					"type": "string",
-					"markdownDescription": "[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-8.4)"
+					"markdownDescription": "The media type of a `string` property.\n\n[JSON Schema Reference](\nhttps://json-schema.org/draft/2020-12/json-schema-validation#section-8.4)"
 				},
 				"contentSchema": {
 					"$ref": "#/$defs/Schema",
@@ -515,7 +549,7 @@
 				}
 			}
 		},
-		"Compatibility-VocabularyNextDraft": {
+		"Compatibility-VocabularyNextVersion": {
 			"$comment": "No certain IRIs for the draft and vocabularies. https://json-schema.org/work-in-progress https://github.com/json-schema-org/json-schema-spec",
 			"properties": {
 				"propertyDependencies": {
@@ -536,8 +570,7 @@
 			},
 			"patternProperties": {
 				"^x-": {
-					"title": "Explicit Annotation",
-					"markdownDescription": "Unreleased [Reference on GitHub](\nhttps://github.com/json-schema-org/json-schema-spec/blob/main/jsonschema-core.md#explicit-annotation-keywords-explicit-annotations)"
+					"title": "Explicit Annotation"
 				}
 			}
 		},
@@ -561,7 +594,7 @@
 				},
 				"$recursiveAnchor": {
 					"type": "string",
-					"$comment": "The requirement for property \"pattern\" is different from\nthe one for \"$anchor\" and \"$dynamicAnchor\" in [Draft 2020-12]",
+					"$comment": "The requirement for property \"pattern\" is different from the one for \"$anchor\" and \"$dynamicAnchor\" in draft 2020-12.",
 					"pattern": "^[A-Za-z][0-9A-Za-z.:_-]*$",
 					"allOf": [
 						{
