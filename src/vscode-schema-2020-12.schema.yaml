@@ -311,7 +311,11 @@ $defs:
           https://json-schema.org/draft/2020-12/json-schema-core#section-10.3.2.3)
       "propertyNames":
         $ref: "#/$defs/Schema"
+        description: >-
+          Validate every property-name in the object instance.
         markdownDescription: |-
+          Validate every property-name in the object *instance*.
+
           [JSON Schema Reference](
           https://json-schema.org/draft/2020-12/json-schema-core#section-10.3.2.4)
 
@@ -502,7 +506,11 @@ $defs:
 
       "uniqueItems":
         type: boolean
+        description: >-
+          Whether all of the items in the array instance must be unique.
         markdownDescription: |-
+          Whether all of the items in the array *instance* must be unique.
+
           [JSON Schema Reference](
           https://json-schema.org/draft/2020-12/json-schema-validation#section-6.4.3)
 
@@ -688,6 +696,9 @@ $defs:
       "readOnly":
         type: boolean
         markdownDescription: |-
+          Indicates that the value of the *instance* is managed exclusively
+          by the owning authority.
+
           [JSON Schema Reference](
           https://json-schema.org/draft/2020-12/json-schema-validation#section-9.4)
       "writeOnly":
